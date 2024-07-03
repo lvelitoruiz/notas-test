@@ -1,0 +1,13 @@
+{
+    "name": "notes-app",
+    "version": "1.0.0",
+    "scripts": {
+      "install": "cd backend && npm install && cd ../frontend && npm install",
+      "start:backend": "cd backend && npm run dev",
+      "start:frontend": "cd frontend && npm run dev",
+      "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
+    },
+    "devDependencies": {
+      "concurrently": "^6.2.0"
+    }
+  }
