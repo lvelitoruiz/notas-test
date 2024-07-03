@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useMemo } from "react";
 import {
@@ -8,16 +8,17 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Box,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
+  Link as MuiLink,
 } from "@mui/material";
+import Link from 'next/link';
 import NoteForm from "../components/NoteForm";
 import NoteList from "../components/NoteList";
-import api, { getCategories } from "../utils/api";
+import api, { getCategories } from '../utils/api';
 import { useAuth } from "../utils/auth";
 import { SelectChangeEvent } from "@mui/material/Select";
 
@@ -51,7 +52,7 @@ export default function Home() {
       const fetchedCategories = await getCategories();
       setCategories(fetchedCategories);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error('Error fetching categories:', error);
     }
   };
 
@@ -60,17 +61,11 @@ export default function Home() {
     fetchCategories();
   }, []);
 
-  const handleCreateNote = async (
-    title: string,
-    content: string,
-    categories: string[]
-  ) => {
-    try {
-      await api.post("/notes", { title, content, categories });
-      fetchNotes();
-      fetchCategories(); // Actualiza la lista de categorías
-    } catch (error) {
-      console.error("Error creating note:", error);
+  const handleEditNote = (id: string) => {
+    const noteToEdit = notes.find((note) => note._id === id);
+    if (noteToEdit) {
+      setEditingNote(noteToEdit);
+      setIsDialogOpen(true);
     }
   };
 
@@ -89,18 +84,10 @@ export default function Home() {
         setIsDialogOpen(false);
         setEditingNote(null);
         fetchNotes();
-        fetchCategories(); // Actualiza la lista de categorías
+        fetchCategories();
       } catch (error) {
         console.error("Error updating note:", error);
       }
-    }
-  };
-
-  const handleEditNote = (id: string) => {
-    const noteToEdit = notes.find((note) => note._id === id);
-    if (noteToEdit) {
-      setEditingNote(noteToEdit);
-      setIsDialogOpen(true);
     }
   };
 
@@ -108,6 +95,7 @@ export default function Home() {
     try {
       await api.delete(`/notes/${id}`);
       fetchNotes();
+      fetchCategories();
     } catch (error) {
       console.error("Error deleting note:", error);
     }
@@ -139,13 +127,23 @@ export default function Home() {
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        Create Note
-      </Typography>
-      <NoteForm onSubmit={handleCreateNote} categories={categories} />
-      <Typography variant="h4" gutterBottom style={{ marginTop: "2rem" }}>
-        My Notes
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h4" gutterBottom>
+          My Notes
+        </Typography>
+        <Box>
+          <Link href="/create" passHref>
+            <MuiLink component="button" color="primary">
+              Create Note
+            </MuiLink>
+          </Link>
+          <Link href="/archived" passHref>
+            <MuiLink component="button" color="primary" style={{ marginLeft: '10px' }}>
+              Archived Notes
+            </MuiLink>
+          </Link>
+        </Box>
+      </Box>
       <Box mb={2}>
         <FormControl fullWidth>
           <InputLabel id="category-filter-label">Filter by Category</InputLabel>

@@ -8,8 +8,8 @@ interface Note {
   _id: string;
   title: string;
   content: string;
-  isArchived: boolean;
   categories: string[];
+  isArchived: boolean;
 }
 
 interface NoteListProps {
@@ -28,7 +28,7 @@ const NoteList: React.FC<NoteListProps> = ({ notes, onEdit, onDelete, onToggleAr
             id={note._id}
             title={note.title}
             content={note.content}
-            categories={note.categories} // Añadido
+            categories={note.categories}
             isArchived={note.isArchived}
             onEdit={onEdit}
             onDelete={onDelete}
