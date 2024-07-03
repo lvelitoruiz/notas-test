@@ -3,21 +3,22 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import api from '../../utils/api';
+import { useUser } from '../../contexts/UserContext';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const { login } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post('/users/login', { username, password });
-      localStorage.setItem('token', response.data.token);
+      await login(username, password);
       router.push('/');
     } catch (error) {
       console.error('Login error:', error);
+      // Manejar el error (por ejemplo, mostrar un mensaje al usuario)
     }
   };
 
