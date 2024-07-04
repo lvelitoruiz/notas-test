@@ -65,17 +65,26 @@ export const login = async (req: Request, res: Response) => {
     }
   };
 
-export const getProfile = async (req: Request, res: Response) => {
-  try {
-    const user = await User.findById(req.user!.id).select('-password');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+  export const getProfile = async (req: Request, res: Response) => {
+    try {
+      const user = await User.findById(req.user!.id).select('-password');
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        noteCount: user.noteCount,
+        lastActive: user.lastActive
+      });
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      res.status(500).json({ message: 'Server error' });
     }
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+  };
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {

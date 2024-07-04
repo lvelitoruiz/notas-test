@@ -1,45 +1,32 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
-import { useUser } from '../contexts/UserContext';
-import Link from 'next/link';
-import ProtectedRoute from './ProtectedRoute';
-import { usePathname } from 'next/navigation';
+import React from "react";
+import { AppBar, Toolbar, Typography, Button, Container } from "@mui/material";
+import { useUser } from "../contexts/UserContext";
+import Link from "next/link";
+import ProtectedRoute from "./ProtectedRoute";
+import { usePathname } from "next/navigation";
+import Header from "@/components/Header";
 
 const AppContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useUser();
   const pathname = usePathname();
 
-  const isLoginPage = pathname === '/login';
+  const isLoginPage = pathname === "/login";
 
   return (
-    <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>
-            Notes App
-          </Typography>
-          {user && (
-            <>
-              <Link href="/" passHref>
-                <Button color="inherit">Home</Button>
-              </Link>
-              <Link href="/archived" passHref>
-                <Button color="inherit">Archived</Button>
-              </Link>
-              <Link href="/profile" passHref>
-                <Button color="inherit">Profile</Button>
-              </Link>
-              <Button color="inherit" onClick={logout}>Logout</Button>
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Container style={{ marginTop: '2rem' }}>
+    <div className="bg-gray-100 min-h-screen w-screen flex items-center justify-center">
+      <div className="bg-gray-700 absolute right-0 top-0 md:w-7/12 h-4/6 z-0 w-full lg:w-5/7"></div>
+      {isLoginPage ? null : (
+        <Header />
+      )}
+
+      <Container
+        className={`relative mx-auto p-0 bg-white min-w-72 max-w-[1200px] w-[90%] ${ !isLoginPage ? "my-[120px] min-h-[calc(100vh-240px)]" : "h-[500px]" } z-10`}
+      >
         {isLoginPage ? children : <ProtectedRoute>{children}</ProtectedRoute>}
       </Container>
-    </>
+    </div>
   );
 };
 

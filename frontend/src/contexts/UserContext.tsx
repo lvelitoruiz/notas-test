@@ -27,12 +27,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUser();
-    } else {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        try {
+          const response = await api.get('/users/profile');
+          setUser(response.data);
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+          localStorage.removeItem('token');
+        }
+      }
       setLoading(false);
-    }
+    };
+
+    checkAuth();
   }, []);
 
   const fetchUser = async () => {
@@ -41,8 +51,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(response.data);
     } catch (error) {
       console.error('Error fetching user:', error);
-    } finally {
-      setLoading(false);
+      throw error;
     }
   };
 
@@ -50,15 +59,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await api.post('/users/login', { username, password });
       localStorage.setItem('token', response.data.token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
       setUser(response.data.user);
-    } catch (error: any) {
-      console.error('Login error:', error.response?.data || error.message);
+    } catch (error) {
+      console.error('Login error:', error);
       throw error;
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
     setUser(null);
   };
 

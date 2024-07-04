@@ -50,16 +50,16 @@ export default function ArchivedNotes() {
   };
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
+    <div className="w-full min-h-full p-12">
+      <h2 className="mb-6 text-2xl font-bold font-sans uppercase">
         Archived Notes
-      </Typography>
+      </h2>
       <NoteList
         notes={notes}
         onEdit={() => {}} // No editing for archived notes
         onDelete={handleDeleteNote}
         onToggleArchive={handleUnarchiveNote}
       />
-    </Box>
+    </div>
   );
 }

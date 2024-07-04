@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Grid } from '@mui/material';
-import NoteItem from './NoteItem';
+import React from "react";
+import { Grid } from "@mui/material";
+import NoteItem from "./NoteItem";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 interface Note {
   _id: string;
@@ -19,24 +20,29 @@ interface NoteListProps {
   onToggleArchive: (id: string) => void;
 }
 
-const NoteList: React.FC<NoteListProps> = ({ notes, onEdit, onDelete, onToggleArchive }) => {
+const NoteList: React.FC<NoteListProps> = ({
+  notes,
+  onEdit,
+  onDelete,
+  onToggleArchive,
+}) => {
   return (
-    <Grid container spacing={2}>
-      {notes.map((note) => (
-        <Grid item xs={12} sm={6} md={4} key={note._id}>
-          <NoteItem
-            id={note._id}
-            title={note.title}
-            content={note.content}
-            categories={note.categories}
-            isArchived={note.isArchived}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onToggleArchive={onToggleArchive}
-          />
-        </Grid>
-      ))}
-    </Grid>
+    <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
+      <Masonry gutter="16px">
+        {notes.map((note) => (
+            <NoteItem
+              id={note._id}
+              title={note.title}
+              content={note.content}
+              categories={note.categories}
+              isArchived={note.isArchived}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onToggleArchive={onToggleArchive}
+            />
+        ))}
+      </Masonry>
+    </ResponsiveMasonry>
   );
 };
 

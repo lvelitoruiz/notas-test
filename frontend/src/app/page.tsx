@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, useMemo } from "react";
 import {
@@ -15,10 +15,10 @@ import {
   InputLabel,
   Link as MuiLink,
 } from "@mui/material";
-import Link from 'next/link';
+import Link from "next/link";
 import NoteForm from "../components/NoteForm";
 import NoteList from "../components/NoteList";
-import api, { getCategories } from '../utils/api';
+import api, { getCategories } from "../utils/api";
 import { useAuth } from "../utils/auth";
 import { SelectChangeEvent } from "@mui/material/Select";
 
@@ -52,7 +52,7 @@ export default function Home() {
       const fetchedCategories = await getCategories();
       setCategories(fetchedCategories);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      console.error("Error fetching categories:", error);
     }
   };
 
@@ -126,25 +126,9 @@ export default function Home() {
   }, [notes, filterCategory]);
 
   return (
-    <>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h4" gutterBottom>
-          My Notes
-        </Typography>
-        <Box>
-          <Link href="/create" passHref>
-            <MuiLink component="button" color="primary">
-              Create Note
-            </MuiLink>
-          </Link>
-          <Link href="/archived" passHref>
-            <MuiLink component="button" color="primary" style={{ marginLeft: '10px' }}>
-              Archived Notes
-            </MuiLink>
-          </Link>
-        </Box>
-      </Box>
-      <Box mb={2}>
+    <div className="w-full min-h-full p-12">
+      <h2 className="mb-6 text-2xl font-bold font-sans uppercase">My Notes</h2>
+      <div className="mb-8 w-full">
         <FormControl fullWidth>
           <InputLabel id="category-filter-label">Filter by Category</InputLabel>
           <Select
@@ -163,16 +147,16 @@ export default function Home() {
             ))}
           </Select>
         </FormControl>
-      </Box>
+      </div>
       <NoteList
         notes={filteredNotes}
         onEdit={handleEditNote}
         onDelete={handleDeleteNote}
         onToggleArchive={handleToggleArchive}
       />
-      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-        <DialogTitle>Edit Note</DialogTitle>
-        <DialogContent>
+      <Dialog fullWidth maxWidth="md" open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+        <DialogTitle className="mb-0 text-2xl font-bold font-sans uppercase">Edit Note</DialogTitle>
+        <div className="p-5 pt-2">
           {editingNote && (
             <NoteForm
               onSubmit={handleUpdateNote}
@@ -183,11 +167,11 @@ export default function Home() {
               isEditMode={true}
             />
           )}
-        </DialogContent>
+        </div>
         <DialogActions>
           <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
-    </>
+    </div>
   );
 }
